@@ -1,0 +1,10 @@
+@import "../variables";
+
+.eca-u-bgColor {
+    &--light {
+        background-color: $white;
+    }
+    &--dark {
+        background-color: $color1;
+    }
+}
