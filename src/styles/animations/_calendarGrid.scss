@@ -1,54 +1,78 @@
 .app-a-calendarGrid {
-    &__next {
-        &-current {
-            animation: nextCurrent 600ms ease;
-        }
-        &-next {
-            animation: nextNext 600ms ease;
-        }
+  &__next {
+    &-current {
+      animation: nextCurrent 600ms ease;
     }
-    &__back {
-        &-current {
-            animation: backCurrent 600ms ease;
-        }
-        &-previously {
-            animation: backPreviously 600ms ease;
-        }
+    &-next {
+      animation: nextNext 600ms ease;
     }
+  }
+  &__back {
+    &-current {
+      animation: backCurrent 600ms ease;
+    }
+    &-previously {
+      animation: backPreviously 600ms ease;
+    }
+  }
+  &__enterModal {
+    animation: enterModal 600ms ease;
+  }
+  &__exitModal {
+    animation: exitModal 600ms ease;
+  }
+}
+
+@keyframes enterModal {
+  0% {
+    bottom: 100%;
+  }
+  100% {
+    bottom: 0%;
+  }
+}
+
+@keyframes exitModal {
+  0% {
+    bottom: 0%;
+  }
+  100% {
+    bottom: 100%;
+  }
 }
 
 @keyframes backCurrent {
-    0% {
-        left: 0%;
-    }
-    100% {
-        left: 100%;
-    }
+  0% {
+    left: 0%;
+  }
+  100% {
+    left: 100%;
+  }
 }
 
 @keyframes backPreviously {
-    0% {
-        right: 100%;
-    }
-    100% {
-        right: 0%;
-    }
+  0% {
+    right: 100%;
+  }
+  100% {
+    right: 0%;
+  }
 }
 
 @keyframes nextCurrent {
-    0% {
-        right: 0%;
-    }
-    100% {
-        right: 100%;
-    }
+  0% {
+    right: 0%;
+  }
+  100% {
+    right: 100%;
+  }
 }
 
 @keyframes nextNext {
-    0% {
-        left: 100%;
-    }
-    100% {
-        left: 0%;
-    }
+  0% {
+    left: 100%;
+  }
+  100% {
+    left: 0%;
+  }
 }

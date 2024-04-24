@@ -1,7 +1,7 @@
 <div class="app">
     <div class="left-container">
         <ng-container *ngIf="isModalOpen">
-            <div class="modal">
+            <div class="modal" #elModal>
                 <div class="modal__header">
                     <button class="left-container__button" (click)="handleModalPreviouslyYear()"
                         [disabled]="animationDelayButton">
@@ -14,6 +14,9 @@
                     </button>
                     <button class="left-container__button" (click)="resetModalDate()" [disabled]="animationDelayButton">
                         <i class="ri-refresh-line"></i>
+                    </button>
+                    <button class="left-container__button" (click)="closeModal()" [disabled]="animationDelayButton">
+                        <i class="ri-close-line"></i>
                     </button>
                 </div>
                 <div class="modal__grid-container">
@@ -32,6 +35,10 @@
                                 <div class="modal__wrapper-item week-day">S</div>
                                 <div class="modal__wrapper-item week-day">S</div>
 
+                                <div class="modal__wrapper-item grid__prevDays"
+                                    *ngFor="let day of getCustomPreviouslyDays(item)">
+                                    {{ day }}
+                                </div>
                                 <div class="modal__wrapper-item" *ngFor="let day of getCustomDays(item)">
                                     {{ day }}
                                 </div>
@@ -40,7 +47,8 @@
                     </div>
                     <!-- CURRENT -->
                     <div class="modal__grid modal__grid--current" #currentModalGrid>
-                        <div class="modal__wrapper" *ngFor="let item of monthList">
+                        <div class="modal__wrapper" *ngFor="let item of monthList"
+                            (click)="handleSelectedModalDate(item)">
                             <div class="modal__wrapper-header">
                                 {{ item.substring(0, 3) }}
                             </div>
@@ -52,7 +60,10 @@
                                 <div class="modal__wrapper-item week-day">Q</div>
                                 <div class="modal__wrapper-item week-day">S</div>
                                 <div class="modal__wrapper-item week-day">S</div>
-
+                                <div class="modal__wrapper-item grid__prevDays"
+                                    *ngFor="let day of getCustomPreviouslyDays(item)">
+                                    {{ day }}
+                                </div>
                                 <div class="modal__wrapper-item" *ngFor="let day of getCustomDays(item)">
                                     {{ day }}
                                 </div>
@@ -74,6 +85,10 @@
                                 <div class="modal__wrapper-item week-day">S</div>
                                 <div class="modal__wrapper-item week-day">S</div>
 
+                                <div class="modal__wrapper-item grid__prevDays"
+                                    *ngFor="let day of getCustomPreviouslyDays(item)">
+                                    {{ day }}
+                                </div>
                                 <div class="modal__wrapper-item" *ngFor="let day of getCustomDays(item)">
                                     {{ day }}
                                 </div>
@@ -110,7 +125,7 @@
             'app-u-bgBlur' : isModalOpen
         }
         ">
-            <div class="grid">
+            <div class="grid" #elMainGrid>
                 <div class="week-day">Domingo</div>
                 <div class="week-day">Segunda</div>
                 <div class="week-day">Terça</div>
@@ -121,7 +136,9 @@
                 <div class="grid__prevDays grid__item" *ngFor="let day of prevDays">
                     {{ day }}
                 </div>
-                <div class="grid__days grid__item" *ngFor="let day of days" (click)="dayClicked(day)">
+                <div class="grid__days grid__item" *ngFor="let day of days" [ngClass]="{
+                    'grid__item--today' : checkToday(day)
+                }" (click)="dayClicked(day)">
                     {{ day }}
                 </div>
                 <div class="grid__nextDays grid__item" *ngFor="let day of nextDays">
@@ -131,6 +148,29 @@
         </div>
     </div>
     <div class="right-container">
-
+        <div class="tasks">
+            <div class="tasks__header">
+                <h1>04</h1>
+                <h4>Quarta-Feira</h4>
+                <div class="tasks__header__add-task">
+                    Adicionar nova tarefa
+                    <button>
+                        <i class="ri-play-list-add-line"></i>
+                    </button>
+                </div>
+                <div class="tasks__wrapper">
+                    <div class="tasks__item">
+                        <div class="tasks__item-left">
+                            <div class="tasks__item-title"></div>
+                            <div class="tasks__item-category"></div>
+                            <div class="tasks__item-description"></div>
+                        </div>
+                        <div class="taks__item-right">
+                            <i class="ri-delete-bin-line"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

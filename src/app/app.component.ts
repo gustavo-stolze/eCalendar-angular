@@ -35,6 +35,8 @@ export class AppComponent {
   @ViewChild('currentModalGrid')
   elCurrentModalGrid!: ElementRef<HTMLDivElement>;
   @ViewChild('nextModalGrid') elNextModalGrid!: ElementRef<HTMLDivElement>;
+  @ViewChild('elModal') elModal!: ElementRef<HTMLDivElement>;
+  @ViewChild('elMainGrid') elMainGrid!: ElementRef<HTMLDivElement>;
 
   dayClicked(day: number) {
     console.log(
@@ -61,6 +63,16 @@ export class AppComponent {
     this.selectedDate = newDate;
     this.udpateDays();
   }
+  checkToday(day: number): boolean {
+    const nowDate = new Date();
+    if (
+      nowDate.getFullYear() !== this.selectedDate.getFullYear() ||
+      nowDate.getMonth() !== this.selectedDate.getMonth()
+    )
+      return false;
+
+    return day === nowDate.getDate();
+  }
   udpateDays(): void {
     this.days = getDays(this.selectedDate);
     this.prevDays = getPrevDays(this.selectedDate);
@@ -71,6 +83,29 @@ export class AppComponent {
 
   openModal() {
     this.isModalOpen = true;
+    this.elMainGrid.nativeElement.style.pointerEvents = 'none';
+    setTimeout(() => {
+      this.elModal.nativeElement.classList.add(
+        'app-a-calendarGrid__enterModal'
+      );
+    }, 50);
+    setTimeout(() => {
+      this.elModal.nativeElement.classList.remove(
+        'app-a-calendarGrid__enterModal'
+      );
+      this.elModal.nativeElement.style.bottom = '0%';
+    }, 600);
+  }
+  closeModal() {
+    this.elModal.nativeElement.classList.add('app-a-calendarGrid__exitModal');
+    setTimeout(() => {
+      this.elModal.nativeElement.classList.remove(
+        'app-a-calendarGrid__exitModal'
+      );
+      this.isModalOpen = false;
+      this.modalDate = new Date();
+      this.elMainGrid.nativeElement.style.pointerEvents = 'all';
+    }, 590);
   }
   handleModalPreviouslyYear() {
     this.elCurrentModalGrid.nativeElement.classList.add(
@@ -121,49 +156,66 @@ export class AppComponent {
 
   resetModalDate() {
     const newDate = new Date();
-  if (newDate.getFullYear() < this.modalDate.getFullYear()) {
-    this.modalDate = newDate;
-    this.elCurrentModalGrid.nativeElement.classList.add(
-      'app-a-calendarGrid__back-current'
-    );
-    this.elPreviouslyModalGrid.nativeElement.classList.add(
-      'app-a-calendarGrid__back-previously'
-    );
-    this.animationDelayButton = true;
-
-    setTimeout(() => {
-      this.elCurrentModalGrid.nativeElement.classList.remove(
+    if (newDate.getFullYear() < this.modalDate.getFullYear()) {
+      this.modalDate = newDate;
+      this.elCurrentModalGrid.nativeElement.classList.add(
         'app-a-calendarGrid__back-current'
       );
-      this.elPreviouslyModalGrid.nativeElement.classList.remove(
+      this.elPreviouslyModalGrid.nativeElement.classList.add(
         'app-a-calendarGrid__back-previously'
       );
-      this.animationDelayButton = false;
-    }, 600);
-  } else if (newDate.getFullYear() > this.modalDate.getFullYear()) {
-    this.modalDate = newDate;
-    this.elCurrentModalGrid.nativeElement.classList.add(
-      'app-a-calendarGrid__next-current'
-    );
-    this.elNextModalGrid.nativeElement.classList.add(
-      'app-a-calendarGrid__next-next'
-    );
-    this.animationDelayButton = true;
+      this.animationDelayButton = true;
 
-    setTimeout(() => {
-      this.elCurrentModalGrid.nativeElement.classList.remove(
+      setTimeout(() => {
+        this.elCurrentModalGrid.nativeElement.classList.remove(
+          'app-a-calendarGrid__back-current'
+        );
+        this.elPreviouslyModalGrid.nativeElement.classList.remove(
+          'app-a-calendarGrid__back-previously'
+        );
+        this.animationDelayButton = false;
+      }, 600);
+    } else if (newDate.getFullYear() > this.modalDate.getFullYear()) {
+      this.modalDate = newDate;
+      this.elCurrentModalGrid.nativeElement.classList.add(
         'app-a-calendarGrid__next-current'
       );
-      this.elNextModalGrid.nativeElement.classList.remove(
+      this.elNextModalGrid.nativeElement.classList.add(
         'app-a-calendarGrid__next-next'
       );
-      this.animationDelayButton = false;
-    }, 600);
-  }
+      this.animationDelayButton = true;
+
+      setTimeout(() => {
+        this.elCurrentModalGrid.nativeElement.classList.remove(
+          'app-a-calendarGrid__next-current'
+        );
+        this.elNextModalGrid.nativeElement.classList.remove(
+          'app-a-calendarGrid__next-next'
+        );
+        this.animationDelayButton = false;
+      }, 600);
+    }
   }
 
-  closeModal() {
-    this.isModalOpen = false;
+  handleSelectedModalDate(mainMonth: string) {
+    const monthNumber = this.monthList.findIndex(
+      (month) => month === mainMonth
+    );
+    const date = new Date();
+    date.setMonth(monthNumber);
+    date.setFullYear(this.modalDate.getFullYear());
+    this.selectedDate = date;
+    console.log(date, monthNumber);
+    this.udpateDays();
+    this.closeModal();
+  }
+  getCustomPreviouslyDays(mainMonth: string): number[] {
+    const monthNumber = this.monthList.findIndex(
+      (month) => month === mainMonth
+    );
+    const date = this.modalDate;
+    date.setMonth(monthNumber);
+    return getPrevDays(date);
   }
   getCustomDays(mainMonth: string): number[] {
     const monthNumber = this.monthList.findIndex(
