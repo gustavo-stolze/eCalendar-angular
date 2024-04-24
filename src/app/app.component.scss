@@ -1,3 +1,184 @@
+@import "../styles/variables";
+
 .app {
-    height: 100vh;
+  height: 100vh;
+}
+
+.left-container {
+  max-width: 900px;
+  position: relative;
+  background-color: $secondaryBgColor;
+  border-radius: 50px;
+  &__header {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  &__top {
+    display: flex;
+    margin-top: 40px;
+    align-items: center;
+  }
+  &__title {
+    font-size: 45px;
+    margin: 0px 30px;
+    color: $primaryColor;
+    user-select: none;
+    -webkit-user-select: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 5px 15px;
+    border-radius: 25px;
+    &:hover {
+      background-color: $hover;
+    }
+  }
+  &__button {
+    border: none;
+    background-color: $primaryColor;
+    border-radius: 50%;
+    color: $secondaryBgColor;
+    width: 40px;
+    transition: all 0.3s ease;
+    position: relative;
+    cursor: pointer;
+    i {
+      font-size: 35px;
+    }
+    &:hover {
+      opacity: 0.7;
+    }
+    &:active {
+      top: -1px;
+    }
+  }
+
+  &__grid {
+    width: 100%;
+  }
+  &__subtitle {
+    h2 {
+      position: relative;
+      font-size: 40px;
+      color: $secondaryColor;
+      margin: 15px 30px 30px 30px;
+    }
+  }
+}
+
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  :nth-child(7n),
+  :nth-child(7n-6) {
+    color: $secondaryColor;
+  }
+  &__item {
+    width: 14%;
+    border-radius: 50px;
+    margin: 10px 0px;
+    padding: 25px 0px;
+    color: $primaryColor;
+    font-weight: 900;
+    font-size: 22px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  &__days {
+    cursor: pointer;
+    &:hover {
+      width: 14.5%;
+      background-color: $hover;
+    }
+  }
+  &__prevDays,
+  &__nextDays {
+    opacity: 0.5;
+  }
+}
+
+.week-day {
+  width: 14%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: $tertiaryColor !important;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.modal {
+  font-size: 13px;
+  position: absolute;
+  z-index: 1;
+  background-color: $hoverBlack;
+  height: 100%;
+  width: 100%;
+  border-radius: 50px;
+  overflow: hidden;
+  &__header {
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    h1 {
+      color: $primaryColor;
+      margin: 0px 20px;
+    }
+    :nth-child(4) {
+      margin-left: auto;
+    }
+  }
+  &__grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    position: absolute;
+    &-container {
+      display: flex;
+    }
+    &--previously {
+      width: 100%;
+      right: 100%;
+    }
+    &--current {
+      width: 100%;
+    }
+    &--next {
+      left: 100%;
+      width: 100%;
+    }
+  }
+  &__wrapper {
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    &-header {
+      color: $primaryColor;
+      font-weight: 900;
+      font-size: 16px;
+      padding: 2px 0px;
+    }
+    &-content {
+      display: flex;
+      flex-wrap: wrap;
+      :nth-child(7n),
+      :nth-child(7n-6) {
+        color: $secondaryColor;
+      }
+    }
+    &-item {
+      width: 14%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 2px;
+      color: $primaryColor;
+    }
+  }
 }

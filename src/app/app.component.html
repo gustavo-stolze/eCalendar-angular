@@ -1,8 +1,134 @@
-<div class="app" [ngClass]="{
-    'eca-u-bgColor--dark': isDarkMode,
-    'eca-u-bgColor--light': !isDarkMode,
-}">
+<div class="app">
     <div class="left-container">
+        <ng-container *ngIf="isModalOpen">
+            <div class="modal">
+                <div class="modal__header">
+                    <button class="left-container__button" (click)="handleModalPreviouslyYear()"
+                        [disabled]="animationDelayButton">
+                        <i class="ri-arrow-left-s-line"></i>
+                    </button>
+                    <h1> {{ modalDate.getFullYear() }} </h1>
+                    <button class="left-container__button" (click)="handleModalNextYear()"
+                        [disabled]="animationDelayButton">
+                        <i class="ri-arrow-right-s-line"></i>
+                    </button>
+                    <button class="left-container__button" (click)="resetModalDate()" [disabled]="animationDelayButton">
+                        <i class="ri-refresh-line"></i>
+                    </button>
+                </div>
+                <div class="modal__grid-container">
+                    <!-- PREVISOULY -->
+                    <div class="modal__grid modal__grid--previously" #previouslyModalGrid>
+                        <div class="modal__wrapper" *ngFor="let item of monthList">
+                            <div class="modal__wrapper-header">
+                                {{ item.substring(0, 3) }}
+                            </div>
+                            <div class="modal__wrapper-content">
+                                <div class="modal__wrapper-item week-day">D</div>
+                                <div class="modal__wrapper-item week-day">S</div>
+                                <div class="modal__wrapper-item week-day">T</div>
+                                <div class="modal__wrapper-item week-day">Q</div>
+                                <div class="modal__wrapper-item week-day">Q</div>
+                                <div class="modal__wrapper-item week-day">S</div>
+                                <div class="modal__wrapper-item week-day">S</div>
+
+                                <div class="modal__wrapper-item" *ngFor="let day of getCustomDays(item)">
+                                    {{ day }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- CURRENT -->
+                    <div class="modal__grid modal__grid--current" #currentModalGrid>
+                        <div class="modal__wrapper" *ngFor="let item of monthList">
+                            <div class="modal__wrapper-header">
+                                {{ item.substring(0, 3) }}
+                            </div>
+                            <div class="modal__wrapper-content">
+                                <div class="modal__wrapper-item week-day">D</div>
+                                <div class="modal__wrapper-item week-day">S</div>
+                                <div class="modal__wrapper-item week-day">T</div>
+                                <div class="modal__wrapper-item week-day">Q</div>
+                                <div class="modal__wrapper-item week-day">Q</div>
+                                <div class="modal__wrapper-item week-day">S</div>
+                                <div class="modal__wrapper-item week-day">S</div>
+
+                                <div class="modal__wrapper-item" *ngFor="let day of getCustomDays(item)">
+                                    {{ day }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- NEXT -->
+                    <div class="modal__grid modal__grid--next" #nextModalGrid>
+                        <div class="modal__wrapper" *ngFor="let item of monthList">
+                            <div class="modal__wrapper-header">
+                                {{ item.substring(0, 3) }}
+                            </div>
+                            <div class="modal__wrapper-content">
+                                <div class="modal__wrapper-item week-day">D</div>
+                                <div class="modal__wrapper-item week-day">S</div>
+                                <div class="modal__wrapper-item week-day">T</div>
+                                <div class="modal__wrapper-item week-day">Q</div>
+                                <div class="modal__wrapper-item week-day">Q</div>
+                                <div class="modal__wrapper-item week-day">S</div>
+                                <div class="modal__wrapper-item week-day">S</div>
+
+                                <div class="modal__wrapper-item" *ngFor="let day of getCustomDays(item)">
+                                    {{ day }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+        <div class=" left-container__header" [ngClass]="{
+            'app-u-bgBlur' : isModalOpen
+        }
+        ">
+            <div class="left-container__top">
+                <button class="left-container__button" (click)="handlePreviouslyMonth()">
+                    <i class="ri-arrow-left-s-line"></i>
+                </button>
+                <h1 class="left-container__title" (click)="openModal()"> {{
+                    selectedDate.getFullYear() }} </h1>
+                <button class="left-container__button" (click)="handleNextMonth()">
+                    <i class="ri-arrow-right-s-line"></i>
+                </button>
+            </div>
+            <button class="left-container__button" style="margin-top: 15px;" (click)="resetDate()">
+                <i class="ri-refresh-line"></i>
+            </button>
+            <div class="left-container__subtitle">
+                <h2>
+                    {{ selectedDate.getMonth() | toMonth }}
+                </h2>
+            </div>
+        </div>
+        <div class="left-container__grid" [ngClass]="{
+            'app-u-bgBlur' : isModalOpen
+        }
+        ">
+            <div class="grid">
+                <div class="week-day">Domingo</div>
+                <div class="week-day">Segunda</div>
+                <div class="week-day">Terça</div>
+                <div class="week-day">Quarta</div>
+                <div class="week-day">Quinta</div>
+                <div class="week-day">Sexta</div>
+                <div class="week-day">Sábado</div>
+                <div class="grid__prevDays grid__item" *ngFor="let day of prevDays">
+                    {{ day }}
+                </div>
+                <div class="grid__days grid__item" *ngFor="let day of days" (click)="dayClicked(day)">
+                    {{ day }}
+                </div>
+                <div class="grid__nextDays grid__item" *ngFor="let day of nextDays">
+                    {{ day }}
+                </div>
+            </div>
+        </div>
     </div>
     <div class="right-container">
 

@@ -1,5 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap");
-
+@import "./variables";
+@import "./animations/calendarGrid";
+@import "./utils/bgBlur";
 * {
   padding: 0;
   font-family: "Ubuntu", sans-serif;
@@ -7,6 +9,6 @@
   box-sizing: border-box;
 }
 
-// components
-
-@import "./components/bgColor";
+body {
+  background-color: $primaryBgColor;
+}
