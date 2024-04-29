@@ -2,13 +2,21 @@
 
 .app {
   height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .left-container {
   max-width: 900px;
+  height: 760px;
+  overflow-y: auto;
+  &[modal="true"] {
+    overflow: hidden;
+  }
   position: relative;
   background-color: $secondaryBgColor;
-  border-radius: 50px;
+  border-radius: 50px 0px 0px 50px;
   &__header {
     display: flex;
     flex-direction: column;
@@ -192,6 +200,210 @@
       align-items: center;
       padding: 2px;
       color: $primaryColor;
+    }
+  }
+}
+
+.right-container {
+  height: 760px;
+  width: 900px;
+  border-radius: 0px 50px 50px 0px;
+  background-color: black;
+  color: $primaryColor;
+  overflow-y: auto;
+}
+
+.tasks {
+  &__loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    &:nth-child(1) > div {
+      display: flex;
+      h1 {
+        font-size: 150px;
+      }
+      h4 {
+        margin-bottom: 30px;
+        align-self: last baseline;
+        font-size: 24px;
+      }
+    }
+    &__add-task {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      button {
+        color: white;
+        margin: 30px;
+        background-color: black;
+        border: none;
+        cursor: pointer;
+        font-size: 32px;
+        padding: 8px;
+        border-radius: 15px;
+        transition: all 0.3s ease;
+        &:hover {
+          background-color: lightgreen;
+          color: black;
+        }
+      }
+    }
+  }
+  &__item {
+    &-left-wrapper {
+      display: flex;
+      align-items: center;
+    }
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    height: 90px;
+    overflow-y: auto;
+    &-left {
+      height: 100%;
+      margin: 0px 20px;
+    }
+    &-title {
+      font-weight: 900;
+      font-size: 20px;
+    }
+    &-location {
+      color: gray;
+      font-size: 13px;
+    }
+    &-right {
+      display: flex;
+      align-items: center;
+      button {
+        padding: 10px;
+        border-radius: 15px;
+        border: none;
+        color: white;
+        font-size: 22px;
+        cursor: pointer;
+        background-color: black;
+        transition: all 0.3s ease;
+        &:hover {
+          background-color: red;
+          color: black;
+        }
+      }
+    }
+  }
+}
+
+.loader {
+  width: 120px;
+  height: 15px;
+  -webkit-mask: linear-gradient(90deg, #2d9fa1 70%, #0000 0) left/20% 100%;
+  background: linear-gradient(#2d9fa1 0 0) left -25% top 0 /20% 100% no-repeat
+    #ddd;
+  animation: l7 1s infinite steps(6);
+}
+@keyframes l7 {
+  100% {
+    background-position: right -25% top 0;
+  }
+}
+
+@media (max-height: 790px) {
+  .modal {
+    font-size: 9px;
+  }
+  .right-container,
+  .left-container {
+    height: 650px;
+  }
+}
+
+@media (max-width: 1800px) {
+  .right-container,
+  .left-container,
+  .modal {
+    border-radius: 0px;
+  }
+}
+
+@media (max-width: 1100px) {
+  .right-container,
+  .left-container {
+    border-radius: 0px;
+    width: 100%;
+  }
+  .modal {
+    overflow-y: auto;
+  }
+  .app {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 665px) {
+  .app {
+    height: auto;
+  }
+  .left-container {
+    height: 100vh;
+    width: 375px;
+    &__top {
+      margin-top: 10px;
+    }
+    &__title,
+    &__subtitle {
+      &,
+      h2 {
+        font-size: 34px;
+      }
+    }
+  }
+  .week-day {
+    font-size: 10px;
+    width: 13.8%;
+  }
+  .grid {
+    &__item {
+      width: 13.8%;
+      margin: 5px 0px;
+      font-size: 16px;
+      padding: 20px 0px;
+      border-radius: 15px;
+    }
+    &__days {
+      &:hover {
+        width: 13.8%;
+      }
+    }
+  }
+  .right-container {
+    min-width: 375px;
+  }
+  .tasks {
+    &__header {
+      &:nth-child(1) > div {
+        h1 {
+          font-size: 100px;
+        }
+        h4 {
+          margin-bottom: 20px;
+        }
+      }
+      &__add-task {
+        span {
+          display: none;
+        }
+      }
+    }
+    &__wrapper {
+      font-size: 10px;
+    }
+    &__item-title {
+      font-size: 15px;
     }
   }
 }

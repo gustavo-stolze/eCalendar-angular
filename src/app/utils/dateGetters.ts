@@ -30,11 +30,6 @@ export const getNextDays = (selectedDate: Date): number[] => {
   const weekDayOfLastDayOfTheMonth = newDate.getDay();
 
   let daysArray = [];
-
-  // if is saturday, return a whole line of days
-  if (weekDayOfLastDayOfTheMonth === 6)
-    return nextDays.filter((day) => day <= 7);
-
   for (let i = 0; i < 6 - weekDayOfLastDayOfTheMonth ;i++) {
     daysArray.push(nextDays[i]);
   }

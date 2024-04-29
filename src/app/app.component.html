@@ -1,5 +1,5 @@
 <div class="app">
-    <div class="left-container">
+    <div class="left-container" [attr.modal]="isModalOpen">
         <ng-container *ngIf="isModalOpen">
             <div class="modal" #elModal>
                 <div class="modal__header">
@@ -150,26 +150,55 @@
     <div class="right-container">
         <div class="tasks">
             <div class="tasks__header">
-                <h1>04</h1>
-                <h4>Quarta-Feira</h4>
+                <div>
+                    <h1>04</h1>
+                    <h4>Quarta-Feira</h4>
+                </div>
                 <div class="tasks__header__add-task">
-                    Adicionar nova tarefa
+                    <span>
+                        Adicionar nova tarefa
+                    </span>
                     <button>
                         <i class="ri-play-list-add-line"></i>
                     </button>
                 </div>
-                <div class="tasks__wrapper">
-                    <div class="tasks__item">
-                        <div class="tasks__item-left">
-                            <div class="tasks__item-title"></div>
-                            <div class="tasks__item-category"></div>
-                            <div class="tasks__item-description"></div>
+            </div>
+            <div class="tasks__wrapper">
+                <ng-container *ngIf="isTasksLoading; then tasksLoading; else taskLoaded"></ng-container>
+                <ng-template #taskLoaded>
+                    <div class="tasks__item" *ngFor="let item of tasks">
+                        <div class="tasks__item-left-wrapper">
+                            <div class="tasks__item-time" *ngIf="item.hourStart">
+                                {{ item.hourStart }}
+                                <ng-container *ngIf="item.hourEnd">
+                                    -
+                                    {{ item.hourEnd }}
+                                </ng-container>
+                            </div>
+                            <div class="tasks__item-left">
+                                <div class="tasks__item-title">
+                                    {{ item.title }}
+                                </div>
+                                <div class="tasks__item-location">
+                                    {{ item.location }}
+                                </div>
+                                <div class="tasks__item-description">
+                                    {{ item.description }}
+                                </div>
+                            </div>
                         </div>
-                        <div class="taks__item-right">
-                            <i class="ri-delete-bin-line"></i>
+                        <div class="tasks__item-right">
+                            <button (click)="handleDeleteTask(item.id)">
+                                <i class="ri-delete-bin-line"></i>
+                            </button>
                         </div>
                     </div>
-                </div>
+                </ng-template>
+                <ng-template #tasksLoading>
+                    <div class="tasks__loading">
+                        <div class="loader"></div>
+                    </div>
+                </ng-template>
             </div>
         </div>
     </div>

@@ -7,7 +7,7 @@ import { ToMonthPipe } from './pipes/to-month.pipe';
 @NgModule({
   declarations: [
     AppComponent,
-    ToMonthPipe
+    ToMonthPipe,
   ],
   imports: [
     BrowserModule,

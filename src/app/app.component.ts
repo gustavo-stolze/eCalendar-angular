@@ -1,14 +1,17 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { getDays, getNextDays, getPrevDays } from './utils/dateGetters';
+import { GetTasksService } from './services/get-tasks.service';
+import { IItem } from './interfaces/item.interface';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   isModalOpen: boolean = false;
   animationDelayButton: boolean = false;
+  isTasksLoading: boolean = true;
 
   selectedDate: Date = new Date();
   prevDays: number[] = getPrevDays(this.selectedDate);
@@ -30,6 +33,8 @@ export class AppComponent {
     'Dezembro',
   ];
 
+  tasks: IItem[] | undefined;
+
   @ViewChild('previouslyModalGrid')
   elPreviouslyModalGrid!: ElementRef<HTMLDivElement>;
   @ViewChild('currentModalGrid')
@@ -37,6 +42,18 @@ export class AppComponent {
   @ViewChild('nextModalGrid') elNextModalGrid!: ElementRef<HTMLDivElement>;
   @ViewChild('elModal') elModal!: ElementRef<HTMLDivElement>;
   @ViewChild('elMainGrid') elMainGrid!: ElementRef<HTMLDivElement>;
+
+  constructor(private readonly _tasksService: GetTasksService) {}
+
+  ngOnInit(): void {
+    this._tasksService.getTasks().subscribe((tasks) => {
+      this.isTasksLoading = true;
+      setTimeout(() => {
+        this.tasks = tasks;
+        this.isTasksLoading = false;
+      }, 1000)
+    });
+  }
 
   dayClicked(day: number) {
     console.log(
@@ -224,5 +241,9 @@ export class AppComponent {
     const date = this.modalDate;
     date.setMonth(monthNumber);
     return getDays(date);
+  }
+  // tasks
+  handleDeleteTask(id: number) {
+    this._tasksService.deleteTask(id);
   }
 }
