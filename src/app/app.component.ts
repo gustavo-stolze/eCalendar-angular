@@ -2,6 +2,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { getDays, getNextDays, getPrevDays } from './utils/dateGetters';
 import { GetTasksService } from './services/get-tasks.service';
 import { IItem } from './interfaces/item.interface';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
@@ -9,14 +10,20 @@ import { IItem } from './interfaces/item.interface';
   styleUrl: './app.component.scss',
 })
 export class AppComponent implements OnInit {
+  isFormModalOpen: boolean = false;
   isModalOpen: boolean = false;
   animationDelayButton: boolean = false;
   isTasksLoading: boolean = true;
 
+  handleSendForm(form: NgForm) {
+    console.log(form);
+  }
+
   selectedDate: Date = new Date();
-  prevDays: number[] = getPrevDays(this.selectedDate);
-  days: number[] = getDays(this.selectedDate);
-  nextDays: number[] = getNextDays(this.selectedDate);
+  currentDate: Date = new Date();
+  prevDays: number[] = getPrevDays(this.currentDate);
+  days: number[] = getDays(this.currentDate);
+  nextDays: number[] = getNextDays(this.currentDate);
   modalDate: Date = new Date();
   monthList: string[] = [
     'Janeiro',
@@ -51,49 +58,64 @@ export class AppComponent implements OnInit {
       setTimeout(() => {
         this.tasks = tasks;
         this.isTasksLoading = false;
-      }, 1000)
+      }, 1000);
     });
   }
 
+  getTasks(): IItem[] | undefined {
+    return this.tasks?.filter(
+      (task) =>
+        task.date.getMonth() === this.selectedDate.getMonth() &&
+        task.date.getFullYear() === this.selectedDate.getFullYear() &&
+        task.date.getDate() === this.selectedDate.getDate()
+    );
+  }
+
   dayClicked(day: number) {
-    console.log(
-      new Date(
-        `${this.selectedDate.getFullYear()}-${
-          this.selectedDate.getMonth() + 1
-        }-${day}`
-      )
+    this.selectedDate = new Date(
+      `${this.currentDate.getFullYear()}-${
+        this.currentDate.getMonth() + 1
+      }-${day}`
     );
   }
   handlePreviouslyMonth() {
-    const newDate = this.selectedDate;
-    newDate.setMonth(this.selectedDate.getMonth() - 1);
-    this.selectedDate = newDate;
+    const newDate = this.currentDate;
+    newDate.setMonth(this.currentDate.getMonth() - 1);
+    this.currentDate = newDate;
     this.udpateDays();
   }
   resetDate() {
-    this.selectedDate = new Date();
+    this.currentDate = new Date();
     this.udpateDays();
   }
   handleNextMonth() {
-    const newDate = this.selectedDate;
-    newDate.setMonth(this.selectedDate.getMonth() + 1);
-    this.selectedDate = newDate;
+    const newDate = this.currentDate;
+    newDate.setMonth(this.currentDate.getMonth() + 1);
+    this.currentDate = newDate;
     this.udpateDays();
   }
   checkToday(day: number): boolean {
     const nowDate = new Date();
     if (
-      nowDate.getFullYear() !== this.selectedDate.getFullYear() ||
-      nowDate.getMonth() !== this.selectedDate.getMonth()
+      nowDate.getFullYear() !== this.currentDate.getFullYear() ||
+      nowDate.getMonth() !== this.currentDate.getMonth()
     )
       return false;
 
     return day === nowDate.getDate();
   }
+  checkSelectedDay(day: number): boolean {
+    if (
+      this.selectedDate.getFullYear() !== this.currentDate.getFullYear() ||
+      this.selectedDate.getMonth() !== this.currentDate.getMonth()
+    )
+      return false;
+    return day === this.selectedDate.getDate();
+  }
   udpateDays(): void {
-    this.days = getDays(this.selectedDate);
-    this.prevDays = getPrevDays(this.selectedDate);
-    this.nextDays = getNextDays(this.selectedDate);
+    this.days = getDays(this.currentDate);
+    this.prevDays = getPrevDays(this.currentDate);
+    this.nextDays = getNextDays(this.currentDate);
   }
 
   // modal
@@ -221,7 +243,7 @@ export class AppComponent implements OnInit {
     const date = new Date();
     date.setMonth(monthNumber);
     date.setFullYear(this.modalDate.getFullYear());
-    this.selectedDate = date;
+    this.currentDate = date;
     console.log(date, monthNumber);
     this.udpateDays();
     this.closeModal();

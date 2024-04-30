@@ -107,7 +107,7 @@
                     <i class="ri-arrow-left-s-line"></i>
                 </button>
                 <h1 class="left-container__title" (click)="openModal()"> {{
-                    selectedDate.getFullYear() }} </h1>
+                    currentDate.getFullYear() }} </h1>
                 <button class="left-container__button" (click)="handleNextMonth()">
                     <i class="ri-arrow-right-s-line"></i>
                 </button>
@@ -117,7 +117,7 @@
             </button>
             <div class="left-container__subtitle">
                 <h2>
-                    {{ selectedDate.getMonth() | toMonth }}
+                    {{ currentDate.getMonth() | toMonth }}
                 </h2>
             </div>
         </div>
@@ -137,7 +137,7 @@
                     {{ day }}
                 </div>
                 <div class="grid__days grid__item" *ngFor="let day of days" [ngClass]="{
-                    'grid__item--today' : checkToday(day)
+                    'grid__item--today' : checkToday(day), 'grid__item--selected': checkSelectedDay(day)
                 }" (click)="dayClicked(day)">
                     {{ day }}
                 </div>
@@ -151,14 +151,14 @@
         <div class="tasks">
             <div class="tasks__header">
                 <div>
-                    <h1>04</h1>
-                    <h4>Quarta-Feira</h4>
+                    <h1> {{ selectedDate.getDate() | getZero }} </h1>
+                    <h4> {{ selectedDate.getDay() | toWeekDay }} </h4>
                 </div>
                 <div class="tasks__header__add-task">
                     <span>
                         Adicionar nova tarefa
                     </span>
-                    <button>
+                    <button (click)="isFormModalOpen = true">
                         <i class="ri-play-list-add-line"></i>
                     </button>
                 </div>
@@ -166,33 +166,45 @@
             <div class="tasks__wrapper">
                 <ng-container *ngIf="isTasksLoading; then tasksLoading; else taskLoaded"></ng-container>
                 <ng-template #taskLoaded>
-                    <div class="tasks__item" *ngFor="let item of tasks">
-                        <div class="tasks__item-left-wrapper">
-                            <div class="tasks__item-time" *ngIf="item.hourStart">
-                                {{ item.hourStart }}
-                                <ng-container *ngIf="item.hourEnd">
-                                    -
-                                    {{ item.hourEnd }}
-                                </ng-container>
+                    <ng-container *ngIf="isFormModalOpen; then formModal; else tasksList"></ng-container>
+                    <ng-template #formModal>
+                        <div class="tasks-form">
+                            <form #tasksForm="ngForm" (ngSubmit)="handleSendForm(tasksForm)">
+                                <div class="tasks-form__item">
+                                    <!-- TODO -->
+                                </div>
+                            </form>
+                        </div>
+                    </ng-template>
+                    <ng-template #tasksList>
+                        <div class="tasks__item" *ngFor="let item of getTasks()">
+                            <div class="tasks__item-left-wrapper">
+                                <div class="tasks__item-time" *ngIf="item.hourStart">
+                                    {{ item.hourStart }}
+                                    <ng-container *ngIf="item.hourEnd">
+                                        -
+                                        {{ item.hourEnd }}
+                                    </ng-container>
+                                </div>
+                                <div class="tasks__item-left">
+                                    <div class="tasks__item-title">
+                                        {{ item.title }}
+                                    </div>
+                                    <div class="tasks__item-location">
+                                        {{ item.location }}
+                                    </div>
+                                    <div class="tasks__item-description">
+                                        {{ item.description }}
+                                    </div>
+                                </div>
                             </div>
-                            <div class="tasks__item-left">
-                                <div class="tasks__item-title">
-                                    {{ item.title }}
-                                </div>
-                                <div class="tasks__item-location">
-                                    {{ item.location }}
-                                </div>
-                                <div class="tasks__item-description">
-                                    {{ item.description }}
-                                </div>
+                            <div class="tasks__item-right">
+                                <button (click)="handleDeleteTask(item.id)">
+                                    <i class="ri-delete-bin-line"></i>
+                                </button>
                             </div>
                         </div>
-                        <div class="tasks__item-right">
-                            <button (click)="handleDeleteTask(item.id)">
-                                <i class="ri-delete-bin-line"></i>
-                            </button>
-                        </div>
-                    </div>
+                    </ng-template>
                 </ng-template>
                 <ng-template #tasksLoading>
                     <div class="tasks__loading">

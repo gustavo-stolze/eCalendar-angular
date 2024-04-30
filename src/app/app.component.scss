@@ -99,6 +99,10 @@
     &--today {
       border: 1px solid $primaryColor;
     }
+    &--selected {
+      background-color: $hover !important;
+      border-radius: 15px;
+    }
   }
   &__days {
     cursor: pointer;
@@ -296,6 +300,10 @@
       }
     }
   }
+}
+
+.tasks-form {
+  // todo
 }
 
 .loader {
