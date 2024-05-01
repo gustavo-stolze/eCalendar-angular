@@ -16,7 +16,6 @@
   }
   position: relative;
   background-color: $secondaryBgColor;
-  border-radius: 50px 0px 0px 50px;
   &__header {
     display: flex;
     flex-direction: column;
@@ -211,7 +210,6 @@
 .right-container {
   height: 760px;
   width: 900px;
-  border-radius: 0px 50px 50px 0px;
   background-color: black;
   color: $primaryColor;
   overflow-y: auto;
