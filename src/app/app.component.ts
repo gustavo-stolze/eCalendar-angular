@@ -3,6 +3,7 @@ import { getDays, getNextDays, getPrevDays } from './utils/dateGetters';
 import { GetTasksService } from './services/get-tasks.service';
 import { IItem } from './interfaces/item.interface';
 import { NgForm } from '@angular/forms';
+import { genKey } from './utils/genKey';
 
 @Component({
   selector: 'app-root',
@@ -11,13 +12,24 @@ import { NgForm } from '@angular/forms';
 })
 export class AppComponent implements OnInit {
   isFormModalOpen: boolean = false;
+  isFormModalEditting: boolean = false;
+  edittingId: number | undefined;
+
+  formTitle: string | undefined;
+  formLocation: string | undefined;
+  formDate: Date | undefined;
+  formDescription: string | undefined;
+
+  resetForm() {
+    this.formTitle = undefined;
+    this.formLocation = undefined;
+    this.formDate = undefined;
+    this.formDescription = undefined;
+  }
+
   isModalOpen: boolean = false;
   animationDelayButton: boolean = false;
   isTasksLoading: boolean = true;
-
-  handleSendForm(form: NgForm) {
-    console.log(form);
-  }
 
   selectedDate: Date = new Date();
   currentDate: Date = new Date();
@@ -63,12 +75,15 @@ export class AppComponent implements OnInit {
   }
 
   getTasks(): IItem[] | undefined {
-    return this.tasks?.filter(
+    let tasks = this.tasks?.filter(
       (task) =>
         task.date.getMonth() === this.selectedDate.getMonth() &&
         task.date.getFullYear() === this.selectedDate.getFullYear() &&
         task.date.getDate() === this.selectedDate.getDate()
     );
+    if (tasks?.length === 0) tasks = undefined;
+    console.log(tasks);
+    return tasks;
   }
 
   dayClicked(day: number) {
@@ -265,7 +280,68 @@ export class AppComponent implements OnInit {
     return getDays(date);
   }
   // tasks
+
+  handleOpenFormModal() {
+    this.isFormModalOpen = true;
+    this.formDate = this.selectedDate;
+  }
+
+  handleRequestForEdit(selectedTask: IItem) {
+    this.isFormModalOpen = true;
+    this.isFormModalEditting = true;
+    this.edittingId = selectedTask.id;
+    this.formTitle = selectedTask.title;
+    this.formLocation = selectedTask.location;
+    this.formDate = selectedTask.date;
+    this.formDescription = selectedTask.description;
+  }
+
+  handleCancelForm() {
+    this.isFormModalOpen = false;
+    this.isFormModalEditting = false;
+    this.resetForm();
+  }
+
   handleDeleteTask(id: number) {
     this._tasksService.deleteTask(id);
+  }
+  handleAddTask() {
+    if (
+      !this.formTitle ||
+      !this.formLocation ||
+      !this.formDate ||
+      !this.formDescription
+    )
+      return;
+    this._tasksService.addTask({
+      id: genKey(),
+      title: this.formTitle,
+      location: this.formLocation,
+      date: this.formDate,
+      description: this.formDescription,
+    });
+    this.resetForm();
+    this.isFormModalOpen = false;
+  }
+  handleEditTask() {
+    if (
+      !this.formTitle ||
+      !this.formLocation ||
+      !this.formDate ||
+      !this.formDescription ||
+      !this.edittingId
+    )
+      return;
+    this._tasksService.editTask(this.edittingId, {
+      id: this.edittingId,
+      title: this.formTitle,
+      location: this.formLocation,
+      date: this.formDate,
+      description: this.formDescription,
+    });
+    this.isFormModalEditting = false;
+    this.edittingId = undefined;
+    this.resetForm();
+    this.isFormModalOpen = false;
   }
 }
